@@ -1,0 +1,106 @@
+{
+    "data": {
+      "ip": "212.58.119.254",
+      "hostname": "212.58.119.254",
+      "type": "v4",
+      "range_type": {
+        "type": "PUBLIC",
+        "description": "Public address"
+      },
+      "connection": {
+        "asn": 16010,
+        "organization": "Magticom Ltd.",
+        "isp": "Magticom Ltd.",
+        "range": "212.58.118.0/23"
+      },
+      "location": {
+        "geonames_id": 10105420,
+        "latitude": 41.713138580322266,
+        "longitude": 44.797821044921875,
+        "zip": "",
+        "continent": {
+          "code": "AS",
+          "name": "Asia",
+          "name_translated": "Asia"
+        },
+        "country": {
+          "alpha2": "GE",
+          "alpha3": "GEO",
+          "calling_codes": [
+            "+995"
+          ],
+          "currencies": [
+            {
+              "symbol": "GEL",
+              "name": "Georgian Lari",
+              "symbol_native": "GEL",
+              "decimal_digits": 2,
+              "rounding": 0,
+              "code": "GEL",
+              "name_plural": "Georgian laris"
+            }
+          ],
+          "emoji": "🇬🇪",
+          "ioc": "GEO",
+          "languages": [
+            {
+              "name": "Georgian",
+              "name_native": "ქართული"
+            }
+          ],
+          "name": "Georgia",
+          "name_translated": "Georgia",
+          "timezones": [
+            "Asia/Tbilisi"
+          ],
+          "is_in_european_union": false,
+          "fips": "GG",
+          "geonames_id": 614540,
+          "hasc_id": "GE",
+          "wikidata_id": "Q230"
+        },
+        "city": {
+          "fips": null,
+          "alpha2": null,
+          "geonames_id": 611717,
+          "hasc_id": null,
+          "wikidata_id": "Q994",
+          "name": "Tbilisi",
+          "name_translated": "Tbilisi"
+        },
+        "region": {
+          "fips": "GG51",
+          "alpha2": "GE-TB",
+          "geonames_id": null,
+          "hasc_id": "GE.TB",
+          "wikidata_id": null,
+          "name": "Tbilisi",
+          "name_translated": "Tbilisi"
+        }
+      },
+      "tlds": [
+        ".ge"
+      ],
+      "timezone": {
+        "id": "Asia/Tbilisi",
+        "current_time": "2023-03-04T18:32:24+04:00",
+        "code": "+04",
+        "is_daylight_saving": false,
+        "gmt_offset": 14400
+      },
+      "security": {
+        "is_anonymous": null,
+        "is_bot": null,
+        "is_known_attacker": null,
+        "is_proxy": null,
+        "is_spam": null,
+        "is_tor": null,
+        "proxy_type": null,
+        "threat_score": null
+      },
+      "domains": {
+        "count": null,
+        "domains": []
+      }
+    }
+  }

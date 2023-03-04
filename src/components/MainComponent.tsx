@@ -1,75 +1,157 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 export default function MainComponent() {
+  const [isMore, setIsMore] = useState<boolean>(false);
+  const [isNight, setIsNight] = useState<boolean>(false);
+  const [data, setData] = useState<any>();
+  const [ip, setIp] = useState<any>("");
+  const [location, setLocation] = useState<any>("");
+  const [isCity, setIsCity] = useState<any>("");
+  //   const [time, setTime] = useState<any>();
+  //   const [updateTime, setUpdateTime] = useState<any>();
+  const Quotes = async () => {
+    await axios
+      .get(`https://api.quotable.io/random`)
+      .then((response) => setData(response.data))
+      .catch((error) => console.log(error));
+  };
 
-    const [isMore, setIsMore] = useState(false);
+  const GetIp = async () => {
+    await axios
+      .get("https://api.ipify.org/?format=json")
+      .then((response) => setIp(response.data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const getLocation = async () => {
+    try {
+      let resLocation = await axios.get(
+        `http://worldtimeapi.org/api/timezone/Asia/Tbilisi`
+      );
+
+      let dataLocation = resLocation.data;
+
+      setLocation(dataLocation);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  
+  let timeData = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+
+  const formatTimeData = timeData.replace(/(AM|PM)/, "");
+
+
+//   
+
+  const getCity = async () => {
+    await axios
+      .get(
+        `https://api.ipbase.com/v2/info?apikey=IXvhqOSAMKS4p5cdp2jZeTtbwNlSgKwpYp1QH5Qf&ip=${ip}`
+      )
+      .then((response) => setIsCity(response.data))
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    Quotes();
+    GetIp();
+    getLocation();
+    getCity();
+   
+  }, []);
+
+
+   
+
 
 
   return (
     <Background>
-      <Img src="/assets/mobile/bg-image-daytime.jpg" alt="" />
+      <Img
+        src={
+          isNight
+            ? "/assets/mobile/bg-image-nighttime.jpg"
+            : "/assets/mobile/bg-image-daytime.jpg"
+        }
+        alt=""
+      />
       <GrayDiv />
 
       <Content>
-        <Text display={isMore? "none" : "flex"}>
+        <Text display={isMore ? "none" : "flex"}>
           <DivP>
-            <P1>
-              “The science of operations, as derived from mathematics more
-              especially, is a science of itself, and has its own abstract truth
-              and value.”
-            </P1>
+            <P1>{data?.content}</P1>
             <P2>Ada Lovelace</P2>
           </DivP>
 
-          <ButtonRefresh>
+          <ButtonRefresh
+            onClick={() => {
+              Quotes();
+              setIsNight(!isNight);
+            }}
+          >
             <RefreshImg src="/assets/desktop/icon-refresh.svg" alt="" />
           </ButtonRefresh>
         </Text>
-        <AllPosit top={isMore? "-157px" : "0"}>
-        <Clock>
-          <ClockHeader>
-            <ClockImg src="/assets/desktop/icon-sun.svg" alt="" />
-            <ClockHeaderP>GOOD MORNING</ClockHeaderP>
-          </ClockHeader>
-          <Time>
-            <TimeNum>11:37</TimeNum>
-            <TimeZone>BST</TimeZone>
-          </Time>
-          <Location>
-            <LocationP>IN LONDON, UK</LocationP>
-          </Location>
-        </Clock>
-        <More>
-          <MoreButton onClick={() => setIsMore(!isMore)}>
-            <MoreP>{isMore? "less" : "more"}</MoreP>
-            <Circle>
-              <img src={isMore ? "/assets/desktop/icon-arrow-up.svg" :"/assets/desktop/icon-arrow-down.svg"} alt="" />
-            </Circle>
-          </MoreButton>
-          <MoreDiv display={isMore? "column" : "none"}>
-            <MoreDivUnder>
-              <MoreDivUnder1>
-                <MoreDivP1>CURRENT TIMEZONE</MoreDivP1>
-                <MoreDivP2>Europe/London</MoreDivP2>
-              </MoreDivUnder1>
-              <MoreDivUnder1>
-                <MoreDivP1>Day of the year</MoreDivP1>
-                <MoreDivP2>295</MoreDivP2>
-              </MoreDivUnder1>
-            </MoreDivUnder>
-            <MoreDivUnder>
-              <MoreDivUnder1>
-                <MoreDivP1>Day of the week</MoreDivP1>
-                <MoreDivP2>5</MoreDivP2>
-              </MoreDivUnder1>
-              <MoreDivUnder1>
-                <MoreDivP1>Week number</MoreDivP1>
-                <MoreDivP2>42</MoreDivP2>
-              </MoreDivUnder1>
-            </MoreDivUnder>
-          </MoreDiv>
-        </More>
+        <AllPosit top={isMore ? "-157px" : "0"}>
+          <Clock>
+            <ClockHeader>
+              <ClockImg src="/assets/desktop/icon-sun.svg" alt="" />
+              <ClockHeaderP>GOOD MORNING</ClockHeaderP>
+            </ClockHeader>
+            <Time>
+              <TimeNum>{formatTimeData}</TimeNum>
+              <TimeZone>BST</TimeZone>
+            </Time>
+            <Location>
+              <LocationP></LocationP>
+            </Location>
+          </Clock>
+          <More>
+            <MoreButton onClick={() => setIsMore(!isMore)}>
+              <MoreP>{isMore ? "less" : "more"}</MoreP>
+              <Circle>
+                <img
+                  src={
+                    isMore
+                      ? "/assets/desktop/icon-arrow-up.svg"
+                      : "/assets/desktop/icon-arrow-down.svg"
+                  }
+                  alt=""
+                />
+              </Circle>
+            </MoreButton>
+            <MoreDiv display={isMore ? "column" : "none"}>
+              <MoreDivUnder>
+                <MoreDivUnder1>
+                  <MoreDivP1>CURRENT TIMEZONE</MoreDivP1>
+                  <MoreDivP2>{location.timezone}</MoreDivP2>
+                </MoreDivUnder1>
+                <MoreDivUnder1>
+                  <MoreDivP1>Day of the year</MoreDivP1>
+                  <MoreDivP2>{location.day_of_year}</MoreDivP2>
+                </MoreDivUnder1>
+              </MoreDivUnder>
+              <MoreDivUnder>
+                <MoreDivUnder1>
+                  <MoreDivP1>Day of the week</MoreDivP1>
+                  <MoreDivP2>{location.day_of_week}</MoreDivP2>
+                </MoreDivUnder1>
+                <MoreDivUnder1>
+                  <MoreDivP1>Week number</MoreDivP1>
+                  <MoreDivP2>{location.week_number}</MoreDivP2>
+                </MoreDivUnder1>
+              </MoreDivUnder>
+            </MoreDiv>
+          </More>
         </AllPosit>
       </Content>
     </Background>
@@ -77,14 +159,14 @@ export default function MainComponent() {
 }
 
 const AllPosit = styled.div<any>`
-    position: relative;
-  top: ${(props) => props.top}
-`
+  position: relative;
+  top: ${(props) => props.top};
+`;
 
 const RefreshImg = styled.img`
-    width: 16.67px;
-    height: 16.67px
-`
+  width: 16.67px;
+  height: 16.67px;
+`;
 const MoreDivUnder1 = styled.div`
   display: flex;
   flex-direction: row;
@@ -98,12 +180,12 @@ const MoreDivUnder = styled.div`
 `;
 
 const MoreDiv = styled.div<any>`
-display: ${(props) => props.display};
-overflow: hidden;
+  display: ${(props) => props.display};
+  overflow: hidden;
   padding: 40px 26px;
   width: 100%;
   background: rgba(255, 255, 255, 0.75);
-  
+
   backdrop-filter: blur(20.3871px);
 `;
 const MoreDivP1 = styled.p`
@@ -128,7 +210,7 @@ const MoreDivP2 = styled.p`
   color: #303030;
 `;
 
-const Circle = styled.div`
+const Circle = styled.div<any>`
   width: 32px;
   height: 32px;
   background: #303030;
@@ -153,7 +235,6 @@ const MoreP = styled.p`
 const More = styled.div`
   margin-top: 48px;
   overflow: hidden;
- 
 `;
 
 const MoreButton = styled.button`
@@ -166,6 +247,9 @@ const MoreButton = styled.button`
   align-items: center;
   margin-bottom: 40px;
   margin-left: 26px;
+  &:hover div {
+    background-color: #999999;
+  }
 `;
 
 const Location = styled.div`
@@ -188,6 +272,7 @@ const Time = styled.div`
   flex-direction: row;
   align-items: flex-end;
   margin-top: 16px;
+  width: 100%;
 `;
 
 const Clock = styled.div`
@@ -195,7 +280,7 @@ const Clock = styled.div`
   margin-top: 228px;
   display: flex;
   flex-direction: column;
-  padding: 0 71px 0 26px;
+  padding: 0 0 0 26px;
 `;
 
 const TimeNum = styled.p`
@@ -207,6 +292,7 @@ const TimeNum = styled.p`
   letter-spacing: -2.5px;
   color: #ffffff;
   margin-right: 5px;
+  width: calc(100% -55px);
 `;
 
 const TimeZone = styled.p`
@@ -270,6 +356,9 @@ const Content = styled.div`
   z-index: 5;
   overflow: hidden;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Text = styled.div<any>`
@@ -279,7 +368,6 @@ const Text = styled.div<any>`
   padding: 0 0 0 26px;
   justify-content: space-between;
   width: 100%;
- 
 `;
 
 const DivP = styled.div`
@@ -296,7 +384,6 @@ const P1 = styled.p`
   display: flex;
   align-items: flex-end;
   color: #ffffff;
- 
 `;
 
 const P2 = styled.p`
