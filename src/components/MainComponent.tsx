@@ -10,7 +10,6 @@ export default function MainComponent() {
   const [location, setLocation] = useState<any>("");
   const [isCity, setIsCity] = useState<any>("");
   const [time, setTime] = useState<any>("");
-  //   const [updateTime, setUpdateTime] = useState<any>();
   const Quotes = async () => {
     await axios
       .get(`https://api.quotable.io/random`)
@@ -39,80 +38,60 @@ export default function MainComponent() {
     }
   };
 
- 
+  const clockNow = () => {
+    const date = new Date();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    setTime(`${hours}:${minutes}`);
+  };
 
-const clockNow = () => {
-  // let timeData = new Date().toLocaleTimeString([], {
-  //   hour: "2-digit",
-  //   minute: "2-digit",
-  // });
-  // const formatTimeData = timeData.replace(/(AM|PM)/, "");
-
-
-  const date = new Date();
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-
-  setTime(`${hours}:${minutes}`);
-
-  
-
-}
-
-setInterval(clockNow, 100)
-
-
- 
-  
+  setInterval(clockNow, 100);
 
   const getCity = async () => {
     await axios
-      .get(
-        `https://ipinfo.io/${ip}/json?token=44f9b6a5c062a8`
-      )
+      .get(`https://ipinfo.io/${ip}/json?token=44f9b6a5c062a8`)
       .then((response) => setIsCity(response.data))
       .catch((error) => console.log(error));
-     
   };
 
   const DayTime = () => {
-  
-
     const date = new Date();
     const Hours = date.getHours();
-    if(Hours > 7 && Hours < 19){
-    setIsNight(false)
-    }else {
-      setIsNight(true)
+    if (Hours > 7 && Hours < 19) {
+      setIsNight(false);
+    } else {
+      setIsNight(true);
     }
-console.log(Hours)
-  }
+    console.log(Hours);
+  };
 
   useEffect(() => {
-    
     Quotes();
     GetIp();
     getLocation();
     getCity();
     DayTime();
-    
   }, []);
-
-
- 
-  
-
 
   return (
     <Background>
       <Img
         src={
           isNight
-            ? "/assets/mobile/bg-image-nighttime.jpg"
-            : "/assets/mobile/bg-image-daytime.jpg"
+            ? window.innerWidth < 768
+              ? "/assets/mobile/bg-image-nighttime.jpg"
+              : window.innerWidth > 1200
+              ? "/assets/desktop/bg-image-nighttime.jpg"
+              : "/assets/tablet/bg-image-nighttime.jpg"
+            : window.innerWidth < 768
+            ? "/assets/mobile/bg-image-daytime.jpg"
+            : window.innerWidth > 1200
+            ? "/assets/desktop/bg-image-daytime.jpg"
+            : "/assets/tablet/bg-image-daytime.jpg"
         }
         alt=""
       />
+
       <GrayDiv />
 
       <Content>
@@ -125,28 +104,42 @@ console.log(Hours)
           <ButtonRefresh
             onClick={() => {
               Quotes();
-             
             }}
           >
             <RefreshImg src="/assets/desktop/icon-refresh.svg" alt="" />
           </ButtonRefresh>
         </Text>
-        <AllPosit top={isMore ? "-147px" : "0"}>
+        <AllPosit top={isMore ? (window.innerWidth < 768 ? "-147px" : window.innerWidth > 1200 ? "-147px" : "-342px") : "0"}>
+          <MainDivFull>
+          
           <Clock>
             <ClockHeader>
-              <ClockImg src={
-                isNight ? 
-                "/assets/desktop/icon-moon.svg"
-                :
-                "/assets/desktop/icon-sun.svg"} alt="" />
-              <ClockHeaderP>{isNight ? "GOOD EVENING" :  "GOOD MORNING"}</ClockHeaderP>
+              <ClockImg
+                src={
+                  isNight
+                    ? "/assets/desktop/icon-moon.svg"
+                    : "/assets/desktop/icon-sun.svg"
+                }
+                alt=""
+              />
+              <ClockHeaderP>
+                {isNight
+                  ? window.innerWidth > 767
+                    ? "GOOD EVENING, IT’S CURRENTLY"
+                    : "GOOD EVENING"
+                  : window.innerWidth > 767
+                  ? "GOOD MORNING, IT’S CURRENTLY"
+                  : "GOOD MORNING"}
+              </ClockHeaderP>
             </ClockHeader>
             <Time>
               <TimeNum>{time}</TimeNum>
               <TimeZone>{isCity.country}</TimeZone>
             </Time>
             <Location>
-              <LocationP>IN {isCity.city} , {isCity.country}</LocationP>
+              <LocationP>
+                IN {isCity.city} , {isCity.country}
+              </LocationP>
             </Location>
           </Clock>
           <More>
@@ -163,43 +156,99 @@ console.log(Hours)
                 />
               </Circle>
             </MoreButton>
-            <MoreDiv
-             display={isMore ? "column" : "none"}
-             background={isNight ? "rgba(0, 0, 0, 0.75)" : "rgba(255, 255, 255, 0.75)"}
+            
+          </More>
+          </MainDivFull>
+          <MoreDiv
+              display={isMore ? (window.innerWidth < 767 ? "column" : "flex") : "none"}
+              background={
+                isNight ? "rgba(0, 0, 0, 0.75)" : "rgba(255, 255, 255, 0.75)"
+              }
             >
               <MoreDivUnder>
                 <MoreDivUnder1>
-                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>CURRENT TIMEZONE</MoreDivP1>
-                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.timezone}</MoreDivP2>
+                  <MoreDivP1 color={isNight ? "#FFFFFF" : "#303030"}>
+                    CURRENT TIMEZONE
+                  </MoreDivP1>
+                  <MoreDivP2 color={isNight ? "#FFFFFF" : "#303030"}>
+                    {location.timezone}
+                  </MoreDivP2>
                 </MoreDivUnder1>
                 <MoreDivUnder1>
-                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>Day of the year</MoreDivP1>
-                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.day_of_year}</MoreDivP2>
+                  <MoreDivP1 color={isNight ? "#FFFFFF" : "#303030"}>
+                    Day of the year
+                  </MoreDivP1>
+                  <MoreDivP2 color={isNight ? "#FFFFFF" : "#303030"}>
+                    {location.day_of_year}
+                  </MoreDivP2>
                 </MoreDivUnder1>
               </MoreDivUnder>
-              <MoreDivUnder>
+              
+              <Inline display={window.innerWidth < 1200 ? "none" : "block"}/>
+              <MoreDivUnder >
+              
                 <MoreDivUnder1>
-                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>Day of the week</MoreDivP1>
-                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.day_of_week}</MoreDivP2>
+                  <MoreDivP1 color={isNight ? "#FFFFFF" : "#303030"}>
+                    Day of the week
+                  </MoreDivP1>
+                  <MoreDivP2 color={isNight ? "#FFFFFF" : "#303030"}>
+                    {location.day_of_week}
+                  </MoreDivP2>
                 </MoreDivUnder1>
                 <MoreDivUnder1>
-                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>Week number</MoreDivP1>
-                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.week_number}</MoreDivP2>
+                  <MoreDivP1 color={isNight ? "#FFFFFF" : "#303030"}>
+                    Week number
+                  </MoreDivP1>
+                  <MoreDivP2 color={isNight ? "#FFFFFF" : "#303030"}>
+                    {location.week_number}
+                  </MoreDivP2>
                 </MoreDivUnder1>
               </MoreDivUnder>
+              
             </MoreDiv>
-          </More>
         </AllPosit>
       </Content>
     </Background>
   );
 }
+const LastOne = styled.div`
+  
+`
 
+const Inline = styled.div<any>`
+  width: 1px;
+  height: auto;
+  background: #FFFFFF;
+mix-blend-mode: normal;
+opacity: 0.25;
+display: ${(props) => props.display};
+transform: translateX(50px);
+
+`
+const MainDivFull = styled.div`
+width: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  @media (width > 1200px) {
+      display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+`
 const AllPosit = styled.div<any>`
   position: relative;
   top: ${(props) => props.top};
- overflow: visible;
-  
+  overflow: visible;
+  /* @media (width > 1200px) {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: space-between;
+  } */
 `;
 
 const RefreshImg = styled.img`
@@ -212,11 +261,26 @@ const MoreDivUnder1 = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 16px;
+  @media (width > 767px) {
+    flex-direction: column;
+   margin-bottom: 49px;
+  }
+  @media (width > 1200px) {
+    margin-top: 42px;
+  }
 `;
-const MoreDivUnder = styled.div`
+const MoreDivUnder = styled.div<any>`
   display: flex;
   flex-direction: column;
+  @media (width > 767px) {
+    flex-direction: column;
+     
+  }
+
+  
 `;
+
+
 
 const MoreDiv = styled.div<any>`
   display: ${(props) => props.display};
@@ -224,8 +288,18 @@ const MoreDiv = styled.div<any>`
   padding: 40px 26px;
   width: 100%;
   background: ${(props) => props.background};
-height: 60vh;
+  height: 60vh;
   backdrop-filter: blur(20.3871px);
+  @media (width > 767px) {
+    padding: 119px 168px 71px 64px;
+    justify-content: space-between;
+    flex-direction: row;
+  }
+  @media (width > 1200px) {
+   padding: 74px 434px 164px  165px;
+   width: 100%;
+   
+  }
 `;
 const MoreDivP1 = styled.p`
   font-style: normal;
@@ -236,7 +310,18 @@ const MoreDivP1 = styled.p`
   align-items: flex-end;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: ${(props)=> props.color};
+  color: ${(props) => props.color};
+  @media (width > 767px) {
+    font-size: 13px;
+    line-height: 28px;
+    letter-spacing: 2.6px;
+    align-self: flex-start
+  }
+  @media (width > 1200px) {
+    font-size: 15px;
+line-height: 28px;
+letter-spacing: 3px;
+  }
 `;
 
 const MoreDivP2 = styled.p`
@@ -246,7 +331,17 @@ const MoreDivP2 = styled.p`
   display: flex;
   align-items: flex-end;
   text-align: right;
-  color: ${(props)=> props.color};
+  color: ${(props) => props.color};
+  @media (width > 767px) {
+    font-size: 40px;
+    line-height: 48px;
+    align-self: flex-start
+  }
+  @media (width > 1200px) {
+    font-size: 56px;
+line-height: 68px;
+margin-top: 9px;
+  }
 `;
 
 const Circle = styled.div<any>`
@@ -257,6 +352,10 @@ const Circle = styled.div<any>`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (width > 767px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
 const MoreP = styled.p`
   font-style: normal;
@@ -269,11 +368,23 @@ const MoreP = styled.p`
   mix-blend-mode: normal;
   opacity: 0.5;
   margin-right: 15px;
+  @media (width > 767px) {
+    font-size: 16px;
+    line-height: 28px;
+  }
 `;
 
 const More = styled.div`
   margin-top: 48px;
   /* overflow: hidden; */
+  @media (width > 767px) {
+    margin-top: 88px;
+  }
+  @media (width > 1200px) {
+    width: 10%;
+    margin-bottom: 98px;
+    margin-right: 165px;
+  }
 `;
 
 const MoreButton = styled.button`
@@ -289,12 +400,30 @@ const MoreButton = styled.button`
   &:hover div {
     background-color: #999999;
   }
+
+  @media (width > 767px) {
+    margin-bottom: 64px;
+    margin-left: 64px;
+    padding: 8px 9px 8px 21px;
+  }
+  @media (width > 1200px) {
+   align-self: flex-end;
+    margin: 0;
+    
+
+  }
 `;
 
 const Location = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 16px;
+  @media (width > 767px) {
+    margin-top: 0;
+  }
+  @media (width > 1200px) {
+    margin-top: 16px;
+  }
 `;
 const LocationP = styled.p`
   font-weight: 700;
@@ -304,6 +433,17 @@ const LocationP = styled.p`
   letter-spacing: 3px;
   text-transform: uppercase;
   color: #ffffff;
+  @media (width > 767px) {
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: 3.6px;
+  }
+  @media (width > 1200px) {
+    font-size: 24px;
+line-height: 28px;
+letter-spacing: 4.8px;
+  }
+ 
 `;
 
 const Time = styled.div`
@@ -312,6 +452,12 @@ const Time = styled.div`
   align-items: flex-end;
   margin-top: 16px;
   width: 100%;
+  @media (width > 767px) {
+    margin-top: 0;
+  }
+  @media (width > 1200px) {
+    margin-top: 16px;
+  }
 `;
 
 const Clock = styled.div`
@@ -320,6 +466,17 @@ const Clock = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 0 0 26px;
+  @media (width > 767px) {
+    padding: 0 0 0 64px;
+    margin-top: 388px;
+  }
+  @media (width > 1200px) {
+margin-top: 233px;
+width: 60%;
+margin-bottom: 98px;
+padding: 0;
+margin-left: 165px;
+  }
 `;
 
 const TimeNum = styled.p`
@@ -332,8 +489,20 @@ const TimeNum = styled.p`
   color: #ffffff;
   margin-right: 5px;
   width: calc(100% -55px);
+  @media (width > 767px) {
+    font-size: 175px;
+    line-height: 175px;
+    letter-spacing: -4.375px;
+    margin-right: 12px;
+  }
+  @media (width > 1200px) {
+font-size: 200px;
+line-height: 200px;
+letter-spacing: -5px;
+margin-right: 11px;
+  }
 `;
-
+ 
 const TimeZone = styled.p`
   font-style: normal;
   font-weight: 300;
@@ -343,6 +512,17 @@ const TimeZone = styled.p`
   align-items: flex-end;
   text-transform: uppercase;
   color: #ffffff;
+  @media (width > 767px) {
+    font-size: 32px;
+    line-height: 28px;
+    transform: translateY(-20px);
+  }
+  @media (width > 1200px) {
+    font-size: 40px;
+line-height: 28px;
+transform: translateY(-25px);
+  }
+  
 `;
 
 const ClockHeader = styled.div`
@@ -358,6 +538,18 @@ const ClockHeaderP = styled.p`
   letter-spacing: 3px;
   text-transform: uppercase;
   color: #ffffff;
+  @media (width > 767px) {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    display: flex;
+    letter-spacing: 3.6px;
+  }
+  @media (width > 1200px) {
+    font-size: 20px;
+line-height: 28px;
+letter-spacing: 4px;
+  }
 `;
 const ClockImg = styled.img`
   width: 23.56px;
@@ -370,7 +562,7 @@ const GrayDiv = styled.div`
   width: 100%;
 
   /* height: 667px; */
-    height: 100vh;
+  height: 100vh;
   position: absolute;
   top: 0;
   opacity: 0.4;
@@ -383,7 +575,7 @@ const Img = styled.img`
   top: 0;
   z-index: -5;
   /* height: 667px; */
-    height: 100vh;
+  height: 100vh;
 `;
 const Background = styled.div`
   width: 100%;
@@ -402,7 +594,12 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
-  
+  @media (width > 767px) {
+    padding: 80px 0 0 0;
+  }
+  @media (width > 1200px) {
+    padding: 56px 0 0 0;
+  }
 `;
 
 const Text = styled.div<any>`
@@ -413,13 +610,25 @@ const Text = styled.div<any>`
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  @media (width > 767px) {
+    padding: 0 132px 0 64px;
+  }
+  @media (width > 1200px) {
+    width: 50%;
+    padding: 0 0 0 165px;
+    
+  }
 `;
 
 const DivP = styled.div`
   display: flex;
   flex-direction: column;
   width: 77.333%;
-   height: auto;
+  height: auto;
+  @media (width > 767px) {
+    width: 100%;
+    margin-right: 15.67px;
+  }
 `;
 
 const P1 = styled.p`
@@ -431,6 +640,11 @@ const P1 = styled.p`
   align-items: flex-start;
   color: #ffffff;
   height: 100%;
+  @media (width > 767px) {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+  }
 `;
 
 const P2 = styled.p`
@@ -442,6 +656,10 @@ const P2 = styled.p`
   margin-top: 8px;
   height: auto;
   align-items: flex-start;
+  @media (width > 767px) {
+    font-size: 18px;
+    line-height: 28px;
+  }
 `;
 
 const ButtonRefresh = styled.button`
