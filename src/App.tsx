@@ -31,6 +31,7 @@ box-sizing: border-box;
 font-family: 'Inter', sans-serif;
 overflow: hidden;
 
+
 }
 body {
 min-width: 320px;

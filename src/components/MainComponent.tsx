@@ -381,7 +381,7 @@ const More = styled.div`
     margin-top: 88px;
   }
   @media (width > 1200px) {
-    width: 10%;
+    /* width: 10%; */
     margin-bottom: 98px;
     margin-right: 165px;
   }
