@@ -6,10 +6,10 @@ export default function MainComponent() {
   const [isMore, setIsMore] = useState<boolean>(false);
   const [isNight, setIsNight] = useState<boolean>(false);
   const [data, setData] = useState<any>();
-  const [ip, setIp] = useState<any>("");
+  const [ip, setIp] = useState<any>("212.58.119.254");
   const [location, setLocation] = useState<any>("");
   const [isCity, setIsCity] = useState<any>("");
-  //   const [time, setTime] = useState<any>();
+  const [time, setTime] = useState<any>("");
   //   const [updateTime, setUpdateTime] = useState<any>();
   const Quotes = async () => {
     await axios
@@ -39,38 +39,68 @@ export default function MainComponent() {
     }
   };
 
+ 
+
+const clockNow = () => {
+  // let timeData = new Date().toLocaleTimeString([], {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  // });
+  // const formatTimeData = timeData.replace(/(AM|PM)/, "");
+
+
+  const date = new Date();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  setTime(`${hours}:${minutes}`);
+
   
-  let timeData = new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+
+}
+
+setInterval(clockNow, 100)
 
 
-  const formatTimeData = timeData.replace(/(AM|PM)/, "");
-
-
-//   
+ 
+  
 
   const getCity = async () => {
     await axios
       .get(
-        `https://api.ipbase.com/v2/info?apikey=IXvhqOSAMKS4p5cdp2jZeTtbwNlSgKwpYp1QH5Qf&ip=${ip}`
+        `https://ipinfo.io/${ip}/json?token=44f9b6a5c062a8`
       )
       .then((response) => setIsCity(response.data))
       .catch((error) => console.log(error));
+     
   };
 
+  const DayTime = () => {
+  
+
+    const date = new Date();
+    const Hours = date.getHours();
+    if(Hours > 7 && Hours < 19){
+    setIsNight(false)
+    }else {
+      setIsNight(true)
+    }
+console.log(Hours)
+  }
+
   useEffect(() => {
+    
     Quotes();
     GetIp();
     getLocation();
     getCity();
-   
+    DayTime();
+    
   }, []);
 
 
-   
-
+ 
+  
 
 
   return (
@@ -89,30 +119,34 @@ export default function MainComponent() {
         <Text display={isMore ? "none" : "flex"}>
           <DivP>
             <P1>{data?.content}</P1>
-            <P2>Ada Lovelace</P2>
+            <P2>{data?.author}</P2>
           </DivP>
 
           <ButtonRefresh
             onClick={() => {
               Quotes();
-              setIsNight(!isNight);
+             
             }}
           >
             <RefreshImg src="/assets/desktop/icon-refresh.svg" alt="" />
           </ButtonRefresh>
         </Text>
-        <AllPosit top={isMore ? "-157px" : "0"}>
+        <AllPosit top={isMore ? "-147px" : "0"}>
           <Clock>
             <ClockHeader>
-              <ClockImg src="/assets/desktop/icon-sun.svg" alt="" />
-              <ClockHeaderP>GOOD MORNING</ClockHeaderP>
+              <ClockImg src={
+                isNight ? 
+                "/assets/desktop/icon-moon.svg"
+                :
+                "/assets/desktop/icon-sun.svg"} alt="" />
+              <ClockHeaderP>{isNight ? "GOOD EVENING" :  "GOOD MORNING"}</ClockHeaderP>
             </ClockHeader>
             <Time>
-              <TimeNum>{formatTimeData}</TimeNum>
-              <TimeZone>BST</TimeZone>
+              <TimeNum>{time}</TimeNum>
+              <TimeZone>{isCity.country}</TimeZone>
             </Time>
             <Location>
-              <LocationP></LocationP>
+              <LocationP>IN {isCity.city} , {isCity.country}</LocationP>
             </Location>
           </Clock>
           <More>
@@ -129,25 +163,28 @@ export default function MainComponent() {
                 />
               </Circle>
             </MoreButton>
-            <MoreDiv display={isMore ? "column" : "none"}>
+            <MoreDiv
+             display={isMore ? "column" : "none"}
+             background={isNight ? "rgba(0, 0, 0, 0.75)" : "rgba(255, 255, 255, 0.75)"}
+            >
               <MoreDivUnder>
                 <MoreDivUnder1>
-                  <MoreDivP1>CURRENT TIMEZONE</MoreDivP1>
-                  <MoreDivP2>{location.timezone}</MoreDivP2>
+                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>CURRENT TIMEZONE</MoreDivP1>
+                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.timezone}</MoreDivP2>
                 </MoreDivUnder1>
                 <MoreDivUnder1>
-                  <MoreDivP1>Day of the year</MoreDivP1>
-                  <MoreDivP2>{location.day_of_year}</MoreDivP2>
+                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>Day of the year</MoreDivP1>
+                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.day_of_year}</MoreDivP2>
                 </MoreDivUnder1>
               </MoreDivUnder>
               <MoreDivUnder>
                 <MoreDivUnder1>
-                  <MoreDivP1>Day of the week</MoreDivP1>
-                  <MoreDivP2>{location.day_of_week}</MoreDivP2>
+                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>Day of the week</MoreDivP1>
+                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.day_of_week}</MoreDivP2>
                 </MoreDivUnder1>
                 <MoreDivUnder1>
-                  <MoreDivP1>Week number</MoreDivP1>
-                  <MoreDivP2>{location.week_number}</MoreDivP2>
+                  <MoreDivP1 color={isNight? "#FFFFFF" : "#303030"}>Week number</MoreDivP1>
+                  <MoreDivP2 color={isNight? "#FFFFFF" : "#303030"}>{location.week_number}</MoreDivP2>
                 </MoreDivUnder1>
               </MoreDivUnder>
             </MoreDiv>
@@ -161,6 +198,8 @@ export default function MainComponent() {
 const AllPosit = styled.div<any>`
   position: relative;
   top: ${(props) => props.top};
+ overflow: visible;
+  
 `;
 
 const RefreshImg = styled.img`
@@ -181,11 +220,11 @@ const MoreDivUnder = styled.div`
 
 const MoreDiv = styled.div<any>`
   display: ${(props) => props.display};
-  overflow: hidden;
+  /* overflow: hidden; */
   padding: 40px 26px;
   width: 100%;
-  background: rgba(255, 255, 255, 0.75);
-
+  background: ${(props) => props.background};
+height: 60vh;
   backdrop-filter: blur(20.3871px);
 `;
 const MoreDivP1 = styled.p`
@@ -197,7 +236,7 @@ const MoreDivP1 = styled.p`
   align-items: flex-end;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #303030;
+  color: ${(props)=> props.color};
 `;
 
 const MoreDivP2 = styled.p`
@@ -207,7 +246,7 @@ const MoreDivP2 = styled.p`
   display: flex;
   align-items: flex-end;
   text-align: right;
-  color: #303030;
+  color: ${(props)=> props.color};
 `;
 
 const Circle = styled.div<any>`
@@ -234,7 +273,7 @@ const MoreP = styled.p`
 
 const More = styled.div`
   margin-top: 48px;
-  overflow: hidden;
+  /* overflow: hidden; */
 `;
 
 const MoreButton = styled.button`
@@ -330,7 +369,8 @@ const GrayDiv = styled.div`
   background: #000000;
   width: 100%;
 
-  height: 667px;
+  /* height: 667px; */
+    height: 100vh;
   position: absolute;
   top: 0;
   opacity: 0.4;
@@ -342,11 +382,13 @@ const Img = styled.img`
   position: absolute;
   top: 0;
   z-index: -5;
-  height: 667px;
+  /* height: 667px; */
+    height: 100vh;
 `;
 const Background = styled.div`
   width: 100%;
-  height: 667px;
+  /* height: 667px; */
+  height: 100vh;
   overflow: hidden;
 `;
 const Content = styled.div`
@@ -359,6 +401,8 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100vh;
+  
 `;
 
 const Text = styled.div<any>`
@@ -368,12 +412,14 @@ const Text = styled.div<any>`
   padding: 0 0 0 26px;
   justify-content: space-between;
   width: 100%;
+  height: 100%;
 `;
 
 const DivP = styled.div`
   display: flex;
   flex-direction: column;
   width: 77.333%;
+   height: auto;
 `;
 
 const P1 = styled.p`
@@ -382,8 +428,9 @@ const P1 = styled.p`
   font-size: 12px;
   line-height: 22px;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   color: #ffffff;
+  height: 100%;
 `;
 
 const P2 = styled.p`
@@ -393,6 +440,8 @@ const P2 = styled.p`
   line-height: 22px;
   color: #ffffff;
   margin-top: 8px;
+  height: auto;
+  align-items: flex-start;
 `;
 
 const ButtonRefresh = styled.button`
