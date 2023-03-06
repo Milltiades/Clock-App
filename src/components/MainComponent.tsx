@@ -27,7 +27,7 @@ export default function MainComponent() {
   const getLocation = async () => {
     try {
       let resLocation = await axios.get(
-        `http://worldtimeapi.org/api/timezone/Asia/Tbilisi`
+        `https://worldtimeapi.org/api/timezone/Asia/Tbilisi`
       );
 
       let dataLocation = resLocation.data;
