@@ -49,7 +49,7 @@ export default function MainComponent() {
 
   const getCity = async () => {
     await axios
-      .get(`https://ipinfo.io/${ip}/json?token=44f9b6a5c062a8`)
+      .get(`http://ipinfo.io/[${ip}]?token=44f9b6a5c062a8`)
       .then((response) => setIsCity(response.data))
       .catch((error) => console.log(error));
   };
@@ -73,6 +73,7 @@ export default function MainComponent() {
     DayTime();
   }, []);
 
+  
   return (
     <Background>
       <Img
