@@ -6,7 +6,7 @@ export default function MainComponent() {
   const [isMore, setIsMore] = useState<boolean>(false);
   const [isNight, setIsNight] = useState<boolean>(false);
   const [data, setData] = useState<any>();
-  const [ip, setIp] = useState<any>("212.58.119.254");
+  const [ip, setIp] = useState<any>("");
   const [location, setLocation] = useState<any>("");
   const [isCity, setIsCity] = useState<any>("");
   const [time, setTime] = useState<any>("");
@@ -109,7 +109,7 @@ export default function MainComponent() {
             <RefreshImg src="/assets/desktop/icon-refresh.svg" alt="" />
           </ButtonRefresh>
         </Text>
-        <AllPosit top={isMore ? (window.innerWidth < 768 ? "-147px" : window.innerWidth > 1200 ? "-147px" : "-342px") : "0"}>
+        <AllPosit top={isMore ? (window.innerWidth < 768 ? "-147px" : window.innerWidth > 1200 ? "-130px" : "-342px") : "0"}>
           <MainDivFull>
           
           <Clock>
