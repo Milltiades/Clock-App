@@ -354,6 +354,7 @@ const Circle = styled.div<any>`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   @media (width > 767px) {
     width: 40px;
     height: 40px;
@@ -370,6 +371,7 @@ const MoreP = styled.p`
   mix-blend-mode: normal;
   opacity: 0.5;
   margin-right: 15px;
+  overflow: hidden;
   @media (width > 767px) {
     font-size: 16px;
     line-height: 28px;
@@ -399,6 +401,7 @@ const MoreButton = styled.button`
   align-items: center;
   margin-bottom: 40px;
   margin-left: 26px;
+  overflow: hidden;
   &:hover div {
     background-color: #999999;
   }
