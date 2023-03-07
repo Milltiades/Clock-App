@@ -73,8 +73,7 @@ export default function MainComponent() {
     DayTime();
   }, []);
 
-  console.log(isCity.city)
-  console.log(isCity.country)
+  
   return (
     <Background>
       <Img
@@ -321,7 +320,7 @@ const MoreDivP1 = styled.p`
   }
   @media (width > 1200px) {
     font-size: 15px;
-line-height: 28px;
+line-height: 15px;
 letter-spacing: 3px;
   }
 `;
@@ -341,8 +340,9 @@ const MoreDivP2 = styled.p`
   }
   @media (width > 1200px) {
     font-size: 56px;
-line-height: 68px;
+line-height: 56px;
 margin-top: 9px;
+margin-top: 10px;
   }
 `;
 
@@ -583,7 +583,7 @@ const Background = styled.div`
   width: 100%;
   /* height: 667px; */
   height: 100vh;
-  overflow: hidden;
+  /* overgflow: hidden; */
 `;
 const Content = styled.div`
   position: absolute;
